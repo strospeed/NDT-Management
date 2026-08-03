@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .dark .glass { background: rgba(15, 23, 42, 0.8); }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); }
+        .dark .glass { background: rgba(15, 23, 42, 0.7); }
         .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
@@ -31,50 +31,65 @@
                     <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl flex items-center justify-center text-white font-bold">NDT</div>
                     <h1 class="text-xl font-bold">ServicePro</h1>
                 </div>
-                <button id="theme-toggle" class="p-3 rounded-2xl bg-slate-200/50 dark:bg-slate-800">🌙</button>
+                <button id="theme-toggle" class="p-3 rounded-2xl bg-slate-200/50 dark:bg-slate-800 hover:scale-105 transition-all">🌙</button>
             </div>
         </nav>
 
         <main class="p-6 max-w-7xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800"><p class="text-slate-500 text-sm">Total Order</p><h2 id="total-orders" class="text-4xl font-extrabold mt-1">0</h2></div>
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-amber-500"><p class="text-slate-500 text-sm">Dalam Proses</p><h2 id="process-orders" class="text-4xl font-extrabold mt-1 text-amber-600">0</h2></div>
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-emerald-500"><p class="text-slate-500 text-sm">Selesai</p><h2 id="done-orders" class="text-4xl font-extrabold mt-1 text-emerald-600">0</h2></div>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm"><p class="text-slate-500 text-sm">Total Order</p><h2 id="total-orders" class="text-4xl font-extrabold mt-1">0</h2></div>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-amber-500"><p class="text-slate-500 text-sm">Dalam Proses</p><h2 id="process-orders" class="text-4xl font-extrabold mt-1 text-amber-600">0</h2></div>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500"><p class="text-slate-500 text-sm">Selesai</p><h2 id="done-orders" class="text-4xl font-extrabold mt-1 text-emerald-600">0</h2></div>
             </div>
             
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-semibold">Riwayat Inspeksi</h2>
-                <button onclick="openModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-semibold hover:bg-indigo-700">+ Tambah Order</button>
+                <button onclick="openModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-semibold hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 transition-all">+ Tambah Order</button>
             </div>
 
-            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                 <table class="w-full text-left"><tbody id="order-table" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody></table>
             </section>
         </main>
     </div>
 
+    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[100]">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md p-8 rounded-3xl border border-slate-200 dark:border-slate-800">
+            <h3 class="text-2xl font-bold mb-6">Order Baru</h3>
+            <form id="order-form" class="space-y-4">
+                <input type="text" id="client" placeholder="Nama Klien" required class="w-full p-4 rounded-2xl border bg-slate-50 dark:bg-slate-800 dark:border-slate-700 outline-none">
+                <select id="method" class="w-full p-4 rounded-2xl border bg-slate-50 dark:bg-slate-800 dark:border-slate-700">
+                    <option>Ultrasonic (UT)</option><option>Radiography (RT)</option><option>Magnetic (MT)</option>
+                </select>
+                <div class="flex gap-3 mt-6"><button type="button" onclick="closeModal()" class="flex-1 py-4 bg-slate-100 rounded-2xl">Batal</button><button type="submit" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl">Simpan</button></div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let orders = JSON.parse(localStorage.getItem('ndt_orders')) || [];
-
         function checkLogin() {
             if (document.getElementById('password-input').value === 'admin') {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
+            } else { document.getElementById('login-error').classList.remove('hidden'); }
         }
 
         const render = () => {
             const table = document.getElementById('order-table');
-            table.innerHTML = orders.map((o, i) => `<tr><td class="px-8 py-5 font-semibold">${o.client}</td><td class="px-8 py-5 text-slate-500">${o.method}</td><td class="px-8 py-5"><button onclick="toggleStatus(${i})" class="px-4 py-1.5 rounded-full text-xs font-bold ${o.status === 'Proses' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${o.status}</button></td></tr>`).join('');
+            table.innerHTML = orders.map((o, i) => `<tr><td class="px-8 py-5">${o.client}</td><td class="px-8 py-5">${o.method}</td><td class="px-8 py-5"><button onclick="toggleStatus(${i})" class="px-4 py-1.5 rounded-full text-xs font-bold ${o.status === 'Proses' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${o.status}</button></td><td class="px-8 py-5 text-right"><button onclick="deleteOrder(${i})" class="text-rose-500">Hapus</button></td></tr>`).join('');
             document.getElementById('total-orders').innerText = orders.length;
+            document.getElementById('process-orders').innerText = orders.filter(o => o.status === 'Proses').length;
+            document.getElementById('done-orders').innerText = orders.filter(o => o.status === 'Selesai').length;
+            localStorage.setItem('ndt_orders', JSON.stringify(orders));
         };
 
-        document.getElementById('theme-toggle').onclick = () => {
-            document.documentElement.classList.toggle('dark');
-        };
-
+        document.getElementById('order-form').onsubmit = (e) => { e.preventDefault(); orders.push({ client: document.getElementById('client').value, method: document.getElementById('method').value, status: 'Proses' }); closeModal(); render(); };
+        const toggleStatus = (i) => { orders[i].status = orders[i].status === 'Proses' ? 'Selesai' : 'Proses'; render(); };
+        const deleteOrder = (i) => { orders.splice(i, 1); render(); };
+        const openModal = () => document.getElementById('modal').classList.remove('hidden');
+        const closeModal = () => document.getElementById('modal').classList.add('hidden');
+        document.getElementById('theme-toggle').onclick = () => document.documentElement.classList.toggle('dark');
         render();
     </script>
 </body>
