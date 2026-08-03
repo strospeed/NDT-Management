@@ -3,62 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NDT Pro | Management System</title>
+    <title>NDT Pro | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { slate: { 950: '#020617' } } } }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { slate: { 950: '#020617' } } } } }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-        .dark .glass { background: rgba(15, 23, 42, 0.8); }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); }
+        .dark .glass { background: rgba(15, 23, 42, 0.7); }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
 
+    <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-[200] bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-center">NDT Pro Access</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center">NDT Access</h2>
             <input type="password" id="password-input" placeholder="Masukkan Master Key" class="w-full p-4 mb-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
-            <button onclick="checkLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all">Login</button>
-            <p id="login-error" class="hidden text-rose-500 text-sm mt-4 text-center font-medium">Kunci Akses Salah</p>
+            <button onclick="checkLogin()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all">Masuk Sistem</button>
         </div>
     </div>
 
-    <div id="app-content" class="hidden min-h-screen">
-        <nav class="glass sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-lg">N</div>
-                    <h1 class="text-xl font-bold tracking-tight">NDT Service Pro</h1>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="exportCSV()" class="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-all">📥</button>
-                    <button id="theme-toggle" class="p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-all">🌓</button>
-                </div>
+    <!-- APP CONTENT -->
+    <div id="app-content" class="hidden flex min-h-screen">
+        <!-- SIDEBAR -->
+        <aside class="w-64 border-r border-slate-200 dark:border-slate-800 p-6 hidden md:flex flex-col gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-lg">N</div>
+                <h1 class="font-bold text-lg">NDT Pro</h1>
             </div>
-        </nav>
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 rounded-xl font-medium">📊 Dashboard</a>
+                <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">📋 Inspeksi</a>
+                <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl font-medium">⚙️ Pengaturan</a>
+            </nav>
+            <div class="mt-auto bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl text-xs text-slate-500">NDT Management System v2.0</div>
+        </aside>
 
-        <main class="p-6 max-w-7xl mx-auto">
+        <!-- MAIN -->
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black">Dashboard</h2>
+                <div class="flex gap-3">
+                    <button id="theme-toggle" class="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">🌓</button>
+                    <button onclick="openModal()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold">+ Baru</button>
+                </div>
+            </header>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm"><p class="text-slate-500 text-sm font-semibold">Total Order</p><h2 id="total-orders" class="text-4xl font-black mt-1">0</h2></div>
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-amber-500"><p class="text-slate-500 text-sm font-semibold">Dalam Proses</p><h2 id="process-orders" class="text-4xl font-black mt-1 text-amber-600">0</h2></div>
-                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500"><p class="text-slate-500 text-sm font-semibold">Selesai</p><h2 id="done-orders" class="text-4xl font-black mt-1 text-emerald-600">0</h2></div>
-            </div>
-            
-            <div class="flex items-center justify-between mb-6">
-                <input type="text" id="search" oninput="render()" placeholder="Cari klien..." class="p-3 px-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-transparent w-64 outline-none focus:ring-2 focus:ring-indigo-500">
-                <button onclick="openModal()" class="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700">+ Tambah Order</button>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm"><p class="text-xs font-bold text-slate-400">TOTAL ORDER</p><h2 id="total-orders" class="text-4xl font-black">0</h2></div>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-amber-500"><p class="text-xs font-bold text-slate-400">PROSES</p><h2 id="process-orders" class="text-4xl font-black text-amber-600">0</h2></div>
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm border-l-4 border-l-emerald-500"><p class="text-xs font-bold text-slate-400">SELESAI</p><h2 id="done-orders" class="text-4xl font-black text-emerald-600">0</h2></div>
             </div>
 
-            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 text-xs font-bold uppercase tracking-widest">
-                        <tr><th class="px-8 py-5">Klien</th><th class="px-8 py-5">Metode</th><th class="px-8 py-5">Status</th><th class="px-8 py-5 text-right">Aksi</th></tr>
+                    <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 text-xs font-bold uppercase p-4">
+                        <tr><th class="px-8 py-4">Klien</th><th class="px-8 py-4">Metode</th><th class="px-8 py-4">Status</th><th class="px-8 py-4 text-right">Aksi</th></tr>
                     </thead>
                     <tbody id="order-table" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
                 </table>
@@ -66,12 +69,13 @@
         </main>
     </div>
 
-    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[100]">
+    <!-- MODAL -->
+    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-[300]">
         <div class="bg-white dark:bg-slate-900 w-full max-w-md p-8 rounded-3xl border border-slate-200 dark:border-slate-800">
-            <h3 class="text-2xl font-black mb-6">Order Baru</h3>
+            <h3 class="text-xl font-bold mb-6">Tambah Order</h3>
             <form id="order-form" class="space-y-4">
-                <input type="text" id="client" placeholder="Nama Perusahaan" required class="w-full p-4 rounded-2xl border bg-slate-50 dark:bg-slate-800 dark:border-slate-700 outline-none">
-                <select id="method" class="w-full p-4 rounded-2xl border bg-slate-50 dark:bg-slate-800 dark:border-slate-700">
+                <input type="text" id="client" placeholder="Nama Klien" required class="w-full p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-transparent outline-none">
+                <select id="method" class="w-full p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-transparent outline-none">
                     <option>Ultrasonic (UT)</option><option>Radiography (RT)</option><option>Magnetic (MT)</option>
                     <option>Liquid Penetrant (PT)</option>
                 </select>
@@ -82,38 +86,21 @@
 
     <script>
         let orders = JSON.parse(localStorage.getItem('ndt_orders')) || [];
-
-        const checkLogin = () => {
-            if(document.getElementById('password-input').value === 'admin') {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-            } else { document.getElementById('login-error').classList.remove('hidden'); }
-        };
-
+        const checkLogin = () => { if(document.getElementById('password-input').value === 'admin') { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); } };
         const render = () => {
-            const query = document.getElementById('search').value.toLowerCase();
-            const filtered = orders.filter(o => o.client.toLowerCase().includes(query));
             const table = document.getElementById('order-table');
-            table.innerHTML = filtered.map((o, i) => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all">
+            table.innerHTML = orders.map((o, i) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                     <td class="px-8 py-5 font-bold">${o.client}</td>
                     <td class="px-8 py-5 text-slate-500">${o.method}</td>
-                    <td class="px-8 py-5"><button onclick="toggleStatus(${i})" class="px-4 py-1.5 rounded-full text-xs font-bold ${o.status === 'Proses' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${o.status}</button></td>
-                    <td class="px-8 py-5 text-right"><button onclick="deleteOrder(${i})" class="text-rose-500 hover:text-rose-700">Hapus</button></td>
+                    <td class="px-8 py-5"><button onclick="toggleStatus(${i})" class="px-3 py-1 rounded-full text-xs font-bold ${o.status === 'Proses' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${o.status}</button></td>
+                    <td class="px-8 py-5 text-right"><button onclick="deleteOrder(${i})" class="text-rose-500">Hapus</button></td>
                 </tr>`).join('');
             document.getElementById('total-orders').innerText = orders.length;
             document.getElementById('process-orders').innerText = orders.filter(o => o.status === 'Proses').length;
             document.getElementById('done-orders').innerText = orders.filter(o => o.status === 'Selesai').length;
             localStorage.setItem('ndt_orders', JSON.stringify(orders));
         };
-
-        const exportCSV = () => {
-            const csv = 'Klien,Metode,Status\n' + orders.map(o => `${o.client},${o.method},${o.status}`).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'laporan-ndt.csv'; a.click();
-        };
-
         document.getElementById('order-form').onsubmit = (e) => { e.preventDefault(); orders.push({ client: document.getElementById('client').value, method: document.getElementById('method').value, status: 'Proses' }); document.getElementById('order-form').reset(); closeModal(); render(); };
         const toggleStatus = (i) => { orders[i].status = orders[i].status === 'Proses' ? 'Selesai' : 'Proses'; render(); };
         const deleteOrder = (i) => { orders.splice(i, 1); render(); };
